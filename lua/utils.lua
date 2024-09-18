@@ -24,6 +24,12 @@ M.pw_play_play_sound = function(path, human_volume)
     vim.system({ 'pw-play', path, '--volume', tostring(volume) }, {}, finished_playing)
 end
 
+-- Play a sound using mpv
+M.mpv_play_sound = function(path, human_volume)
+    local volume = convert_volume(human_volume) * 100.0
+    vim.system({ 'mpv', path, '--no-keep-open', '--volume='..tostring(volume) }, {}, finished_playing)
+end
+
 -- Good old path exists function
 M.path_exists = function(path)
     local ok, err, code = os.rename(path, path)
