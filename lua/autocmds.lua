@@ -33,9 +33,12 @@ local cb = function(event, sound, player, max_sounds)
         player_function = utils.pw_play_play_sound
     elseif player == "mpv" then
         player_function = utils.mpv_play_sound
+    else
+        print("reverb.nvim: " .. player .. " is not a valid player")
     end
 
     if utils.path_exists(path) then
+        local status = nil
         -- There could be other events?
         if event == "BufWrite" then
             -- only if the buffer has been modified ?
@@ -43,16 +46,21 @@ local cb = function(event, sound, player, max_sounds)
             local buf_modified = vim.api.nvim_buf_get_option(buf, "modified")
             if buf_modified then
                 RUNNING_PROCESSES = RUNNING_PROCESSES + 1
-                player_function(path, sound.volume)
+                status = player_function(path, sound.volume)
             end
         else
             RUNNING_PROCESSES = RUNNING_PROCESSES + 1
-            player_function(path, sound.volume)
+            status = player_function(path, sound.volume)
+        end
+
+        if status == false then
+            print("reverb.nvim: Spawing player failed, disabling plugin")
+            PLUGIN_ENABLED = false
         end
     else
         if not missing_sounds[path] then
             missing_sounds[path] = true
-            print("file " .. path .. "does not exist")
+            print("reverb.nvim: file " .. path .. "does not exist")
         end
     end
 end

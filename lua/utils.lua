@@ -22,6 +22,7 @@ M.paplay_play_sound = function(path, human_volume)
     local handle, pid = uv.spawn('paplay', { args = { path, '--volume', tostring(volume) } }, finished_playing)
     if handle == nil then
         print("reverb.nvim: Could not spawn paplay")
+        return false
     end
 end
 
@@ -31,18 +32,20 @@ M.pw_play_play_sound = function(path, human_volume)
     local handle, pid = uv.spawn('pw-play', { args = { path, '--volume', tostring(volume) } }, finished_playing)
     if handle == nil then
         print("reverb.nvim: Could not spawn pw-play")
+        return false
     end
 end
 
 -- Play a sound using mpv
 M.mpv_play_sound = function(path, human_volume)
     local volume = convert_volume(human_volume) * 100
-    local handle, pid = uv.spawn('mpv', {
+    local handle, pid = uv.spawn('mapv', {
             args = { path, '--volume='..tostring(volume), '--no-keep-open' },
             verbatism = true  -- To fix some issue with quoting paths on windows
         }, finished_playing)
     if handle == nil then
         print("reverb.nvim: Could not spawn mpv")
+        return false
     end
 end
 

@@ -2,6 +2,7 @@ local M = {}
 
 -- Default options, can be overriden in plugin opts
 local DEFAULT_OPTS = {
+    player = "paplay",
     sounds = {
     }
 }
